@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock title %}
+{% block content %}
+    <h2>Ваш заказ:</h2>
+    <div class="cart-products">
+        {% for product in session.cart %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">{{ product.title }}</div>
+                    <div class="product-price">{{ product.price }} р.</div>
+                    <div class="product-category">{{ product.category_title }}</div>
+                    <img src="{{ product.image }}" alt="{{ product.image }}" class="product-image">
+                    <p>
+                        <a class="btn btn-primary" href="{{ url_for('.product_detail', product_id=product.id) }}" role="button">Подробнее</a>
+                    </p>
+                    <p>
+                        <a class="btn btn-danger" href="{{ url_for('.cart_delete', product_id=product.id) }}" role="button">Удалить из корзины</a>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="links">
+        {% if session.is_authenticated %}
+            <a class="btn btn-primary" href="{{ url_for('auth.order_add') }}">Оформить</a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ url_for('auth.signup') }}">Зарегистрироваться</a>
+        {% endif %}
+    </div>
+{% endblock content %}

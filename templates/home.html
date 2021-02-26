@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}У Саши{% endblock title %}
+
+{% block content %}
+    <h2>
+        Главная
+    </h2>
+    <div class="products">
+        {% for product in products %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">{{ product.title }}</div>
+                    <div class="product-price">{{ product.price }}</div>
+                    <div class="product-category">{{ product.category_title }}</div>
+                    <img src="{{ product.image }}" alt="{{ product.image }}" class="product-image">
+                    <p>
+                        <a class="btn btn-primary" href="{{ url_for('product.product_detail', product_id=product.id) }}" role="button">Подробнее</a>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        {% for page_num in pagination %}
+            {% if page == page_num %}
+                <a class="btn btn-primary disabled" href="{{ url_for('home', page=page_num) }}" >
+                    {{ page_num }}
+                </a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('home', page=page_num) }}" >
+                    {{ page_num }}
+                </a>
+            {% endif %}
+        {% endfor%}
+    </div>
+{% endblock content %}

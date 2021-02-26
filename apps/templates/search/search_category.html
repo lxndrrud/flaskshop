@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Поиск{% endblock title %}
+{% block content %}
+    <h2>Поиск по категории</h2>
+    {% for category in categories %}
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    {{ category.title }}
+                </div>
+                <a class="btn btn-primary" href="{{ url_for('.search_product', category_title=category.title) }}">Подробнее</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

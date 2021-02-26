@@ -1,0 +1,5 @@
+.git
+.vscode
+__pycache__
+venv
+db_script.py

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.title }}{% endblock title %}
+{% block content %}
+    
+    <h2 style="text-align: center;">{{ product.title }}</h2>
+    <img src="{{ product.image }}" alt="{{ product.image }}">
+    <h3>Цена: {{ product.price }} р.</h3>
+    {% if product.description is not none %}
+        <h3>{{ product.description }}</h3>
+    {% endif %}
+    {% if product.category_title == 'Ноутбук' %}
+        <div class="product-detail">
+            <h3>Модель процессора: {{ product.processor_model }}</h3>
+            <h3>Видеокарта: {{ product.video }}</h3>
+            <h3>Оперативная память: {{ product.ram }} Гб</h3>
+        </div>
+    {% elif product.category_title == 'Смартфон' %}
+        <div class="product-detail">
+            <h3>Оперативная память: {{ product.ram}} Гб</h3>
+            <h3>Внутрення память: {{ product.inner_memory_size }} Гб</h3>
+            <h3>Задняя камера: {{ product.main_camera }} МПи</h3>
+            <h3>Фронтальная камера: {{ product.front_camera }} МПи</h3>
+        </div>
+    {% endif %}
+
+    <!--
+    <div class="product-detail">
+        <h2 style="text-align: center;">{{ product.title }}</h2>
+        <img src="{{ product.image }}" alt="HIHI!">
+        <h3>{{ product.description }}</h3>
+    </div>
+    -->
+    <a class="btn btn-primary" href="{{ url_for('.cart_add', product_id = product.id) }}">Добавить в корзину</a>
+{% endblock content %}

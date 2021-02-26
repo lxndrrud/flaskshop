@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}У Саши{% endblock title %}block
+{% block content %}
+    <h2 class="page-title">Регистрация</h2>
+    <form action="{{ url_for('.signup') }}" method="POST">
+        {{ csrf_token }}
+        <div class="form-group">
+            <input class="form-control form-control-lg" type="text" placeholder="Логин" name="nickname" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control form-control-lg" type="text" placeholder="Ваше имя" name="name" required>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control form-control-lg"  placeholder="Пароль" name="password" required>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control form-control-lg"  placeholder="Адрес" name="address" required>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control form-control-lg"  placeholder="Номер телефона" name="phone" required>
+        </div>
+        <p><button type="submit" class="btn btn-primary">Submit</button></p>
+    </form>
+{% endblock content %}

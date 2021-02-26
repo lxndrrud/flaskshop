@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <div class="wrapper">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home') }}">Главная</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('search.search_category') }}">Поиск</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('product.cart') }}">Корзина</a>
+            </li>
+            {% if not session.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.signin') }}">Войти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.signup') }}">Регистрация</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.client', client_id=session.id) }}">Ваши заказы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.change_password', client_id=session.id) }}">Сменить пароль</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Выйти</a>
+                </li>
+            {% endif %}
+        </ul>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning" role="alert">
+                        <div class="flashed-message">{{ message }}</div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="content">{% block content %}{% endblock content %}</div>
+        
+        <div class="footer">
+            <p><a href="https://github.com/lxndrrud">lxndrrud</a></p>
+        </div>
+    </div>
+</body>
+</html>

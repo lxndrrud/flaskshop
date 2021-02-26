@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Поиск{% endblock title %}
+{% block content %}
+    <h2>Поиск в категории &laquo;{{ category_title }}&raquo;</h2>
+    <div class="search-form">
+        <form action="{{ url_for ('.search_product', category_title=category_title)}}" method="POST">
+            {{ csrf_token }}
+            {% if category_title == 'Ноутбук' %}
+                <h3>Оперативная память</h3>
+                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                    {% if filter["notebook-ram-l4"] %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-l4" id="notebook-ram-l4" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-l4" id="notebook-ram-l4" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="notebook-ram-l4">&lt; 4 гб</label>
+
+                    {% if filter["notebook-ram-4"] %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-4" id="notebook-ram-4" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-4" id="notebook-ram-4" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="notebook-ram-4"> 4 гб</label>
+
+
+                    {% if filter["notebook-ram-6"] %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-6" id="notebook-ram-6" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-6" id="notebook-ram-6" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="notebook-ram-6">6 гб</label>
+
+
+                    {% if filter["notebook-ram-8"] %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-8" id="notebook-ram-8" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="notebook-ram-8" id="notebook-ram-8" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="notebook-ram-8">8 гб</label>
+
+                </div>
+            {% elif category_title == 'Смартфон' %}
+                <h3>Оперативная память</h3>
+                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                    {% if filter["smartphone-ram-l4"] %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-l4" id="smartphone-ram-l4" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-l4" id="smartphone-ram-l4" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="smartphone-ram-l4">&lt; 4 гб</label>
+
+                    {% if filter["smartphone-ram-4"] %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-4" id="smartphone-ram-4" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-4" id="smartphone-ram-4" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="smartphone-ram-4">4 гб</label>
+
+                    {% if filter["smartphone-ram-6"] %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-6" id="smartphone-ram-6" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-6" id="smartphone-ram-6" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="smartphone-ram-6">6 гб</label>
+
+                    {% if filter["smartphone-ram-8"] %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-8" id="smartphone-ram-8" autocomplete="off" checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="smartphone-ram-8" id="smartphone-ram-8" autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-outline-primary" for="smartphone-ram-8">8 гб</label>
+                </div>
+            {% endif %}
+            <p>
+                <input class="btn btn-primary" type="submit" value="Поиск">
+            </p>
+        </form>
+        
+    </div>
+    <div class="products">
+        {% if products == [] %}
+        <h3>К сожалению, товаров по данному запросу сейчас нет в наличии.</h3>
+        {% endif %}
+        {% for product in products %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">{{ product.title }}</div>
+                    <div class="product-price">{{ product.price }}</div>
+                    <div class="product-category">{{ product.category_title }}</div>
+                    <img src="{{ product.image }}" alt="{{ product.image }}" class="product-image">
+                    <p>
+                        <a class="btn btn-primary" href="{{ url_for('product.product_detail', product_id=product.id) }}" role="button">Подробнее</a>
+                    </p>
+                </div>
+            </div>
+        
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        {% for page_num in pagination %}
+            {% if page == page_num %}
+                <a class="btn btn-primary disabled" href="{{ url_for('.search_product', category_title=category_title, page=page_num) }}" >
+                    {{ page_num }}
+                </a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('.search_product', category_title=category_title, page=page_num) }}" >
+                    {{ page_num }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock content %}
