@@ -60,7 +60,7 @@ def logout():
     session.pop('nickname', None)
     session.pop('id', None)
     session['is_authenticated'] = False
-    session['cart'] = []
+    session.pop('cart', None)
     return redirect(url_for('home'))
 
 @auth_app.route('/client/<int:client_id>/', methods=['GET'])
@@ -68,6 +68,7 @@ def client(client_id):
     if session['is_authenticated']:
         if session['id'] == client_id:
             orders = Order.query.filter_by(client_id=client_id).all()
+            orders.reverse()
             return render_template('client.html', orders=orders)
     flash('У вас нет прав доступа.')
     return redirect(url_for('home'))
@@ -82,13 +83,13 @@ def order_add():
         for product in session['cart']:
             o = OrderToProduct(order.id, product_id=product.id)
             sum += product.price
-            print(sum, product.price)
             db.session.add(o)
+        session['cart'] = []
+        ClientCartProducts.query.filter(ClientCartProducts.client_id==session['id']).delete(synchronize_session=False)
         Order.query.filter_by(id=order.id).update({'sum': sum})
         db.session.commit()
-        print(Order.query.all())
-        print(OrderToProduct.query.all())
         return redirect(url_for('.client', client_id=session['id']))
+    flash("Авторизуйтесь и добавьте товары в корзину для оформления заказа.")
     return redirect(url_for('home'))
 
 @auth_app.route('/order/<int:order_id>/')
@@ -98,13 +99,10 @@ def order_detail(order_id):
         if session['is_authenticated'] and session['id'] == order.client_id:
             prods = OrderToProduct.query.filter_by(order_id=order_id).all()
             ids = [x.product_id for x in prods]
-            print(prods)
             order_list = []
             for id_ in ids:
                 prod = Product.query.filter_by(id=id_).first()
-                print(prod)
                 order_list.append(prod)
-            print(order_list)
             return render_template('order_detail.html', products=order_list, order=order)
         flash('У вас нет прав доступа.')
         return redirect(url_for('home'))

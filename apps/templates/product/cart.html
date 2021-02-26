@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}{% endblock title %}
 {% block content %}
-    <h2>Ваш заказ:</h2>
+    <h2>Ваша корзина</h2>
     <div class="cart-products">
+        {% if session.cart == [] %}
+            <h3>Вы еще ничего не выбрали...</h3>
+        {% endif %}
         {% for product in session.cart %}
             <div class="card">
                 <div class="card-body">
