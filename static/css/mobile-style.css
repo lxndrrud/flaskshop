@@ -88,4 +88,11 @@
     float: none;
     height: fit-content;
   }
+  .btn-check,
+  .page-link{
+    clear: both;
+  }
+  .btn-group{
+    display: block;
+  }
   
