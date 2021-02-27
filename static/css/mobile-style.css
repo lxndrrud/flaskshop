@@ -42,8 +42,8 @@
     text-align: center;
   }
   .card{
+    width: 100%;
     border-radius: 10px;
-    width: 280px;
     float: left;
     border: none;
     margin-right: 10px;
@@ -94,5 +94,8 @@
   }
   .btn-group{
     display: block;
+  }
+  .products{
+    text-align: center;
   }
   
