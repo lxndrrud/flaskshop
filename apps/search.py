@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, session, request
 from models import db, Product, ClientCartProducts, NotebookProduct, SmartphoneProduct, Category
-from utils import paginate, max_split_on_pages, generate_pagination
+from utils import paginate, max_split_on_pages, generate_pagination, check_string_arg
 
 search_app = Blueprint('search', __name__, template_folder='templates/search', static_folder='../static')
 
@@ -12,6 +12,9 @@ def search_category():
 
 @search_app.route('/category/<string:category_title>/', methods=['GET', 'POST'])
 def search_product(category_title):
+    if not check_string_arg(category_title):
+        flash('Ошибка!')
+        return redirect(url_for('home'))
     if request.method == 'GET':
         if request.args.get('page', False):
             args = session['search_filter']
@@ -35,7 +38,6 @@ def search_product(category_title):
         result = search_result(category_title, args)
         session['search_result'] = result
         session['search_max_split'] = max_split_on_pages(result)
-        print(session['search_max_split'])
         result = paginate(result, 1)
         pagination = generate_pagination(1, session['search_max_split'])
         return render_template('search_product.html', products=result, category_title=category_title, filter=args, page=1, pagination=pagination)

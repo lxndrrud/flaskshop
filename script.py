@@ -1,5 +1,4 @@
-from flask import Flask, render_template, session, flash, redirect, url_for
-from flask.globals import request
+from flask import Flask, render_template, session, flash, redirect, url_for, request
 from flask_session import Session
 # from flask_sqlalchemy import SQLAlchemy
 from models import db, Product
@@ -26,13 +25,26 @@ app.register_blueprint(auth_app)
 app.register_blueprint(search_app)
 
 
+@app.before_request
+def session_init():
+    if not session.get('is_authenticated', False):
+            session['is_authenticated'] = False
+    if not session.get('cart', False):
+        session['cart'] = []
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('errors/404.html'), 404
+
+
+@app.errorhandler(403)
+def forbidden_page(e):
+    return render_template('errors/403.html'), 403
+
 
 @app.route('/', methods=['GET'])
 def home():
-    if not session.get('is_authenticated', False):
-        session['is_authenticated'] = False
-    if not session.get('cart', False):
-        session['cart'] = []
     page = request.args.get('page', 1, type=int)
     products = Product.query.all()
     max_split = max_split_on_pages(products)
@@ -49,4 +61,4 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', debug=True)
+    app.run('0.0.0.0')

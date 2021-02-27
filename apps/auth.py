@@ -1,5 +1,6 @@
 from flask import Blueprint, session, render_template, request, flash, redirect, url_for
 from models import db, Client, ClientCartProducts, Product, Order, OrderToProduct, bcrypt
+from utils import check_int_arg
 
 
 auth_app = Blueprint('auth', __name__,  template_folder='templates/auth', static_folder='../static')
@@ -65,6 +66,9 @@ def logout():
 
 @auth_app.route('/client/<int:client_id>/', methods=['GET'])
 def client(client_id):
+    if not check_int_arg(client_id):
+        flash('Ошибка!')
+        return redirect(url_for('home'))
     if session['is_authenticated']:
         if session['id'] == client_id:
             orders = Order.query.filter_by(client_id=client_id).all()
@@ -75,7 +79,7 @@ def client(client_id):
 
 @auth_app.route('/order/add/')
 def order_add():
-    if session['is_authenticated'] and session['cart']!=[]:
+    if session['is_authenticated'] and session['cart'] != []:
         order = Order(session['id'])
         db.session.add(order)
         db.session.commit()
@@ -94,6 +98,9 @@ def order_add():
 
 @auth_app.route('/order/<int:order_id>/')
 def order_detail(order_id):
+    if not check_int_arg(order_id):
+        flash('Ошибка!')
+        return redirect(url_for('home'))
     order = Order.query.filter_by(id=order_id).first()
     if order is not None:
         if session['is_authenticated'] and session['id'] == order.client_id:

@@ -1,21 +1,17 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, session
 from models import db, Product, ClientCartProducts, NotebookProduct, SmartphoneProduct
+from utils import check_int_arg
 
 product_app = Blueprint('product', __name__, template_folder='templates/product', static_folder='../static')
 
 
 def define_product(product_id):
     prod = Product.query.filter_by(id=product_id).first()
-    if prod.category_title == 'Ноутбук':
-        prod = NotebookProduct.query.filter_by(id=prod.id).first()
-    elif prod.category_title == 'Смартфон':
-        prod = SmartphoneProduct.query.filter_by(id=prod.id).first()
-    return prod
-
-"""
-def define_product(product_id):
-    return Product.query.filter_by(id=product_id).first()
-"""
+    categories = {
+        'Ноутбук': NotebookProduct.query.filter_by(id=prod.id).first,
+        'Смартфон': SmartphoneProduct.query.filter_by(id=prod.id).first,
+    }
+    return categories[prod.category_title]()
 
 
 @product_app.route('/cart/', methods=['GET'])
@@ -27,6 +23,9 @@ def cart():
 
 @product_app.route('/cart/add/<int:product_id>/', methods=['GET'])
 def cart_add(product_id):
+    if not check_int_arg(product_id):
+        flash('Ошибка!')
+        return redirect(url_for('home'))
     product = define_product(product_id)
     if product is not None:
         session['cart'].append(product)
@@ -41,6 +40,9 @@ def cart_add(product_id):
 
 @product_app.route('/cart/delete/<int:product_id>/', methods=['GET'])
 def cart_delete(product_id):
+    if not check_int_arg(product_id):
+        flash('Ошибка!')
+        return redirect(url_for('home'))
     product = define_product(product_id)
     ids = [x.id for x in session['cart']]
     if product.id in ids:
@@ -56,6 +58,9 @@ def cart_delete(product_id):
 
 @product_app.route('/detail/<int:product_id>/', methods=['GET'])
 def product_detail(product_id):
+    if not check_int_arg(product_id):
+        flash('Ошибка!')
+        return redirect(url_for('home'))
     product = define_product(product_id)
     return render_template('product_detail.html', product=product)
 
