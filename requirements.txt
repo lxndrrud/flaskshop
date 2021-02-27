@@ -3,6 +3,7 @@ cachelib==0.1.1
 cffi==1.14.5
 click==7.1.2
 Flask==1.1.2
+Flask-Mobility==1.1.0
 Flask-Session==0.3.2
 Flask-SQLAlchemy==2.4.4
 gunicorn==20.0.4
