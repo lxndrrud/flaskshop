@@ -6,6 +6,7 @@ from models import db, Product
 from apps.product import product_app
 from apps.auth import auth_app
 from apps.search import search_app
+from apps.mail import mail, mail_config
 from utils import max_split_on_pages, generate_pagination, paginate
 import os
 
@@ -14,6 +15,7 @@ app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'sqlalchemy'
 app.secret_key = os.environ.get('SECRET_KEY', '12123124')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config.update(mail_config)
 # db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
@@ -21,6 +23,7 @@ app.config['SESSION_SQLALCHEMY'] = db
 session_ = Session(app)
 session_.app.session_interface.db.create_all()
 Mobility(app)
+mail.init_app(app)
 
 app.register_blueprint(product_app)
 app.register_blueprint(auth_app)

@@ -1,6 +1,7 @@
 from flask import Blueprint, session, render_template, request, flash, redirect, url_for
 from models import db, Client, ClientCartProducts, Product, Order, OrderToProduct, bcrypt
 from utils import check_int_arg
+from .mail import send_order_add_email
 
 
 auth_app = Blueprint('auth', __name__,  template_folder='templates/auth', static_folder='../static')
@@ -28,7 +29,7 @@ def signup():
         query = Client.query.filter_by(nickname=request.form['nickname']).first()
         if query is None:
             # nickname, name, password, address, phone
-            client = Client(request.form['nickname'], request.form['name'], request.form['password'], request.form['address'], request.form['phone'])
+            client = Client(request.form['nickname'], request.form['name'], request.form['password'], request.form['address'], request.form['phone'], request.form['email'])
             db.session.add(client)
             db.session.commit()
             return redirect(url_for('.signin'))
@@ -92,6 +93,7 @@ def order_add():
         ClientCartProducts.query.filter(ClientCartProducts.client_id==session['id']).delete(synchronize_session=False)
         Order.query.filter_by(id=order.id).update({'sum': sum})
         db.session.commit()
+        send_order_add_email(Client.query.filter(Client.id==session['id']).first(), sum)
         return redirect(url_for('.client', client_id=session['id']))
     flash("Авторизуйтесь и добавьте товары в корзину для оформления заказа.")
     return redirect(url_for('home'))

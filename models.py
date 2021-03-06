@@ -9,19 +9,21 @@ class Client(db.Model):
     nickname = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(15), nullable=False)
     orders = db.relationship('Order', backref=db.backref('client'))
 
-    def __init__(self, nickname, name, password, address, phone):
+    def __init__(self, nickname, name, password, address, phone, email):
         self.nickname = nickname
         self.name = name
         self.password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         self.address = address
         self.phone = phone
+        self.email = email
 
     def __repr__(self):
-        return f'<User {self.id}, {self.nickname}, {self.address}>'
+        return f'<User {self.id}, {self.nickname}, {self.email}>'
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)

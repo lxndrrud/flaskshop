@@ -1,0 +1,5 @@
+{% extends 'mail_base.html' %}
+{% block content %}
+    <h2>Здравствуйте, {{ client.name }}!</h2>
+    <h3>Вы оформили заказ на cумму {{ sum }} рублей.</h3>
+{% endblock content %}
