@@ -89,11 +89,12 @@ def order_add():
             o = OrderToProduct(order.id, product_id=product.id)
             sum += product.price
             db.session.add(o)
+        order_list = session['cart']
         session['cart'] = []
         ClientCartProducts.query.filter(ClientCartProducts.client_id==session['id']).delete(synchronize_session=False)
         Order.query.filter_by(id=order.id).update({'sum': sum})
         db.session.commit()
-        send_order_add_email(Client.query.filter(Client.id==session['id']).first(), sum)
+        send_order_add_email(Client.query.filter(Client.id==session['id']).first(), sum, order_list)
         return redirect(url_for('.client', client_id=session['id']))
     flash("Авторизуйтесь и добавьте товары в корзину для оформления заказа.")
     return redirect(url_for('home'))

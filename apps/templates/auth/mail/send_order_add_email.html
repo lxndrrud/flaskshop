@@ -2,4 +2,11 @@
 {% block content %}
     <h2>Здравствуйте, {{ client.name }}!</h2>
     <h3>Вы оформили заказ на cумму {{ sum }} рублей.</h3>
+    <ul>
+    {% for product in order_list %}
+        <li>
+            {{ product.title }} - {{ product.price }}
+        </li>
+    {% endfor %}
+    </ul>
 {% endblock content %}

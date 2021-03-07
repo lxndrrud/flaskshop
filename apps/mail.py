@@ -15,8 +15,8 @@ mail_config = {
 mail = Mail()
 
 
-def send_order_add_email(client, sum):
+def send_order_add_email(client, sum, order_list):
     msg = Message('Ваш заказ', sender=mail_config['FLASK_MAIL_SENDER'], recipients=[client.email])
     #msg.html = f"""<h2>Здравствуйте, {client.name}!</h2>\n<h3>Вы оформили заказ на сумма {sum} рублей.</h3>"""
-    msg.html = render_template('mail/send_order_add_email.html', client=client, sum=sum)
+    msg.html = render_template('mail/send_order_add_email.html', client=client, sum=sum, order_list=order_list)
     mail.send(msg)
